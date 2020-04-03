@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,10 +27,10 @@ public class BankAccountController {
 	BankAccountService bankservice;
 	
 	
-	@GetMapping
-	public ResponseEntity<List<?>> getMiniStatement(){
+	@GetMapping("/{acno}/{transdate}")
+	public ResponseEntity<List<?>> getMiniStatement(@PathVariable("acno") long acno,@PathVariable("transdate") String transdate) throws ParseException{
 		
-		List<TransactionMaster> statement=bankservice.getMiniStatement();
+		List<TransactionMaster> statement=bankservice.getMiniStatement(acno,transdate);
 		
 		return new ResponseEntity<List<?>>(statement,new HttpHeaders(),HttpStatus.OK);
 	}

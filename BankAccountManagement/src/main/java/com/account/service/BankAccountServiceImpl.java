@@ -98,18 +98,20 @@ public class BankAccountServiceImpl implements BankAccountService {
 		}
 		
 	}	
+	
+	
 	@Override
-	public List<TransactionMaster> getMiniStatement() {
-		List<TransactionMaster> minstatement=transRepository.findAll();
-		if(minstatement.size()>0) {
-			return minstatement;
+	public List<TransactionMaster> getMiniStatement(long acno, String trnsdate) throws ParseException {
+		//String sDate1=transreq.getTransdate();
+		java.util.Date transdate = null;
+		transdate = new SimpleDateFormat("dd-MM-yyyy").parse(trnsdate);
+		List<TransactionMaster> transList=transRepository.getTransDataByacNoAndDate(acno,transdate);
+		if(transList.size()>0) {
+			return transList;
 		}else {
-			return new ArrayList<TransactionMaster>();//it will return new Empty List
+			return new ArrayList<TransactionMaster>();
 		}
 	}
-	
-	
-	
 	
 	
 	
@@ -133,6 +135,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 	    System.out.println("Digits: "+Long.parseLong(new String(digits)));
 	    return Long.parseLong(new String(digits));
 	}
+	
 
 
 

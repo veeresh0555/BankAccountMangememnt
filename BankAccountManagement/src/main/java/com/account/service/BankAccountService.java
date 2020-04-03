@@ -14,7 +14,7 @@ public interface BankAccountService {
 
 	public TransactionMaster fundTransfer(TransactionMasterrequest transrequest) throws RecordsNotFoundException,ParseException;
 
-	public List<TransactionMaster> getMiniStatement();
+	public List<TransactionMaster> getMiniStatement(long acno, String transdate) throws ParseException;
 
 	
 
