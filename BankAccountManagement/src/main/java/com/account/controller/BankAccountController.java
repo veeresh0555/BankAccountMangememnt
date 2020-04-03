@@ -28,11 +28,11 @@ public class BankAccountController {
 	
 	
 	@GetMapping("/{acno}/{transdate}")
-	public ResponseEntity<List<?>> getMiniStatement(@PathVariable("acno") long acno,@PathVariable("transdate") String transdate) throws ParseException{
+	public ResponseEntity<List<TransactionMaster>> getMiniStatement(@PathVariable("acno") long acno,@PathVariable("transdate") String transdate) throws ParseException{
 		
 		List<TransactionMaster> statement=bankservice.getMiniStatement(acno,transdate);
 		
-		return new ResponseEntity<List<?>>(statement,new HttpHeaders(),HttpStatus.OK);
+		return new ResponseEntity<List<TransactionMaster>>(statement,new HttpHeaders(),HttpStatus.OK);
 	}
 	
 	

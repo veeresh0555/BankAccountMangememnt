@@ -12,7 +12,7 @@ import com.account.model.TransactionMaster;
 @Repository
 public interface TransRepository extends JpaRepository<TransactionMaster, Long> {
 
-	@Query("select tm from TransactionMaster tm where tm.acno=:acno and tm.transdate=:transdate")
-	public List<TransactionMaster> getTransDataByacNoAndDate(@Param("acno")long acno,@Param("transdate") Date transdate);
+	@Query("select tmm from TransactionMaster tmm where tmm.frmaccount=:frmaccount and tmm.transdate=:transdate")
+	public List<TransactionMaster> getTransDataByacNoAndDate(@Param("frmaccount")long frmaccount,@Param("transdate") Date transdate);
 
 }
