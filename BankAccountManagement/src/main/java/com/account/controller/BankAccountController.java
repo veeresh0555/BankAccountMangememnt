@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,13 +37,13 @@ public class BankAccountController {
 	
 	
 	@PostMapping("/createorupdateCustomer")
-	public ResponseEntity<?> CreateOrUpdateCustomer(@Valid Customer customer) throws RecordsNotFoundException{
+	public ResponseEntity<?> CreateOrUpdateCustomer(@Valid @RequestBody Customer customer) throws RecordsNotFoundException{
 		Customer updatecustomer=bankservice.CreateOrUpdateCustomer(customer);
 		return new ResponseEntity<Customer>(updatecustomer,new HttpHeaders(),HttpStatus.OK);
 	}
 	
 	@PostMapping("/fundtransfer")
-	public ResponseEntity<?> fundTransfer(TransactionMasterrequest transrequest) throws RecordsNotFoundException, ParseException {
+	public ResponseEntity<?> fundTransfer(@RequestBody TransactionMasterrequest transrequest) throws RecordsNotFoundException, ParseException {
 		TransactionMaster fundtransfer=bankservice.fundTransfer(transrequest);
 		return new ResponseEntity<TransactionMaster>(fundtransfer,new HttpHeaders(),HttpStatus.OK);
 	}
