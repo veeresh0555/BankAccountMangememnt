@@ -3,6 +3,8 @@ package com.account.controller;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,18 +28,15 @@ public class BankAccountController {
 	@Autowired
 	BankAccountService bankservice;
 	
-	
 	@GetMapping("/{acno}/{transdate}")
 	public ResponseEntity<List<TransactionMaster>> getMiniStatement(@PathVariable("acno") long acno,@PathVariable("transdate") String transdate) throws ParseException{
-		
 		List<TransactionMaster> statement=bankservice.getMiniStatement(acno,transdate);
-		
 		return new ResponseEntity<List<TransactionMaster>>(statement,new HttpHeaders(),HttpStatus.OK);
 	}
 	
 	
 	@PostMapping("/createorupdateCustomer")
-	public ResponseEntity<?> CreateOrUpdateCustomer(Customer customer) throws RecordsNotFoundException{
+	public ResponseEntity<?> CreateOrUpdateCustomer(@Valid Customer customer) throws RecordsNotFoundException{
 		Customer updatecustomer=bankservice.CreateOrUpdateCustomer(customer);
 		return new ResponseEntity<Customer>(updatecustomer,new HttpHeaders(),HttpStatus.OK);
 	}
