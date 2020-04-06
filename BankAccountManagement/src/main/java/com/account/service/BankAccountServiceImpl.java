@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.account.exception.RecordsNotFoundException;
 import com.account.model.AccountNumberEntity;
 import com.account.model.Customer;
@@ -18,7 +16,6 @@ import com.account.repository.AccountNumberRepository;
 import com.account.repository.BankAccountRepository;
 import com.account.repository.TransRepository;
 import com.account.request.TransactionMasterrequest;
-
 
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
@@ -31,8 +28,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 	
 	@Autowired
 	TransRepository transRepository;
-	
-	
+
 	@Override
 	public Customer CreateOrUpdateCustomer(Customer customer) throws RecordsNotFoundException {
 		Optional<Customer> custById=customerRepository.findById(customer.getCustid());
@@ -46,25 +42,30 @@ public class BankAccountServiceImpl implements BankAccountService {
 			newcustomer=customerRepository.save(newcustomer);
 			return newcustomer;
 		}else {
-			AccountNumberEntity ac=new AccountNumberEntity();
-			//ac.setCust(customer.getCustid());
+			Optional<AccountNumberEntity> acNumb=accRepository.findById(customer.getCustid());
+			if(acNumb.isPresent()) {
+				AccountNumberEntity acn=acNumb.get();
+				acn.setAcno(generateaccountNumber());
+				acn.setOpeningbalance(5000.00);
+				return customer;
+			}else {
+			 AccountNumberEntity ac=acNumb.get();
 			  ac.setAcno(generateaccountNumber()); 
 			  ac.setOpeningbalance(5000.00);
 			  customer=customerRepository.save(customer);
-			return customer;
+			  return customer;
+			}
 		}
-		
 	}
+	
 	@Override
 	public TransactionMaster fundTransfer(TransactionMasterrequest transreq) throws RecordsNotFoundException, ParseException {
-
 		Optional<AccountNumberEntity> fromac=accRepository.findByAccNumber(transreq.getFrmaccount());
 		if(fromac.isPresent()) {
 			Optional<AccountNumberEntity> toac=accRepository.findByAccNumber(transreq.getToaccount());
 			if(toac.isPresent()) {
 				AccountNumberEntity updatefrmamount=fromac.get();
 				AccountNumberEntity updateToamount=toac.get();
-				
 				if(updatefrmamount.getOpeningbalance()>=transreq.getAmount()) {
 					updatefrmamount.setOpeningbalance((updatefrmamount.getOpeningbalance()-transreq.getAmount()));
 					accRepository.save(updatefrmamount);
@@ -113,16 +114,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public static long generateaccountNumber() {//int length
 	    Random random = new Random();
 	    char[] digits = new char[12];
@@ -130,8 +121,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 	    for (int i = 1; i < 12; i++) {
 	        digits[i] = (char) (random.nextInt(10) + '0');
 	    }
-	    
-	    
 	    System.out.println("Digits: "+Long.parseLong(new String(digits)));
 	    return Long.parseLong(new String(digits));
 	}
